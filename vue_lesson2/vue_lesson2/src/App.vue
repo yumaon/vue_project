@@ -1,47 +1,40 @@
 <script setup>
-import HelloWorld from './components/HelloWorld.vue'
-import TheWelcome from './components/TheWelcome.vue'
+import { ref } from 'vue'
+
+const count = ref(2)
+const count2 = ref(3)
+
+// v-htmlを使用してHTMLとして出力する
+const message = ref('<h1>Hello<h1>')
+
+// v-bindを使用して属性値を指定する
+const vueURL = ref('https://vue.js.org')
+const vueId = ref('vue-link')
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="./assets/logo.svg" width="125" height="125" />
+  <div>{{ count + count2 }}</div>
+  <div>{{ count > 3 ? 'yes' : 'no' }}</div>
+  <!-- v-textは、<div>{{ count }}</div>と同じ -->
+  <div v-text="count"></div>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-    </div>
-  </header>
+  <!-- v-htmlを使用してHTMLとして出力する -->
+  <!-- ただし、セキュリティ的な観点で、webページを自由に書き換えられてしまうため、使い方には注意。ユーザーからもらったデータではない、信頼できるデータを指定するようにする。 -->
+  <div v-html="message"></div>
 
-  <main>
-    <TheWelcome />
-  </main>
+  <!-- v-bindを使用して属性値を指定する -->
+  <a v-bind:id="vueId" v-bind:href="vueURL">Vue.js</a>
+  <!-- v-bind:idやv-bind:~という記述は省略できる。(推奨)-->
+  <a :id="vueId" :href="vueURL">Vue.js</a>
+  <!-- undefinend,nullで属性を消すこともできる -->
+  <a :id="undefined" :href="null">Vue.js</a>
+
+  <!-- Boolean属性に対してv-bindを利用する -->
+  <!-- disabledはboolean属性の一つで、値をとらなくても動作する。（disabledがあると無効化になる） -->
+  <button disabled>buttom</button>
+  <!-- Boolean属性にはfalse,undefined,0,-0,0n,NaN を入れたときに属性がつかなくなる。-->
+  <button :disabled="false">button</button>
+
+  <!-- v-bindで一度に複数の属性を指定する -->
+  <a v-bind="{ id: vueId, href: vueURL }">Vue.js</a>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-}
-</style>
