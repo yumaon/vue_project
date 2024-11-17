@@ -10,6 +10,16 @@ const message = ref('<h1>Hello<h1>')
 // v-bindを使用して属性値を指定する
 const vueURL = ref('https://vue.js.org')
 const vueId = ref('vue-link')
+
+// numberボタンを押されるとカウントされるナンバー
+const number = ref(0)
+
+const pushNunBtn = () => {
+  number.value++
+}
+function countUp() {
+  number.value++
+}
 </script>
 
 <template>
@@ -37,4 +47,15 @@ const vueId = ref('vue-link')
 
   <!-- v-bindで一度に複数の属性を指定する -->
   <a v-bind="{ id: vueId, href: vueURL }">Vue.js</a>
+
+  <!-- v-onを用いてクリックなどのイベント発生時に特定の処理をする -->
+  <p>{{ number }}</p>
+  <button v-on:click="number++">number</button>
+  <!-- 上記の「v-on」を省略する記述 -->
+  <!-- 処理を直接書くパターンのハンドラーのことをインラインハンドラーという -->
+  <button @click="number++">number</button>
+  <!-- 関数を使用したもの -->
+  <!-- 関数自体を書くハンドラーのことを、メソッドハンドラーという -->
+  <button @click="pushNunBtn">number</button>
+  <button @click="countUp">number</button>
 </template>
