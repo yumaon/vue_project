@@ -14,11 +14,27 @@ const vueId = ref('vue-link')
 // numberボタンを押されるとカウントされるナンバー
 const number = ref(0)
 
+/**
+ * イベントオブジェクトの取得方法
+ * クリックイベントのようなブラウザが発生させているイベントはそのイベントが発生した時に同時に
+ * イベントオブジェクトという、そのイベントの情報を持ったオブジェクトを生成している。
+ * vue.jsではそれを取得できるようになっている。
+ *
+ * まずメソッドハンドラに関しては、（例で、countUp関数を使用）
+ * function countUp(event) {
+ *   number.value++
+ * }
+ * こんな感じで、第一引数に自動で入るようになっている。
+ */
+
 const pushNunBtn = () => {
   number.value++
 }
-function countUp() {
-  number.value++
+function countUp(event) {
+  //number.value++
+  console.log(event)
+  // 上記で表示されたもので、例えば「clientX、clientY」はボタンがクリックされた時のマウスの一を取得するもの
+  number.value = event.clientX
 }
 </script>
 
@@ -58,4 +74,8 @@ function countUp() {
   <!-- 関数自体を書くハンドラーのことを、メソッドハンドラーという -->
   <button @click="pushNunBtn">number</button>
   <button @click="countUp">number</button>
+
+  <!-- インラインハンドラーではどうやってイベントオブジェクトにアクセスすることができるのか -->
+  <button @click="number = $event.clientX">X軸表示</button>
+  <!-- $eventにイベントオブジェクトが格納されている -->
 </template>
