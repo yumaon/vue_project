@@ -1,0 +1,16 @@
+services:
+  vue_app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+      - ./vue_lesson:/app/vue_lesson
+    ports:
+      - "5173:5173"
+    working_dir: /app/vue_lesson
+    command: npm run dev
+
+volumes:
+  node_modules:
