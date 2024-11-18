@@ -36,6 +36,10 @@ function countUp(event) {
   // 上記で表示されたもので、例えば「clientX、clientY」はボタンがクリックされた時のマウスの一を取得するもの
   number.value = event.clientX
 }
+
+function countUp2(event, times) {
+  number.value = event.clientX * times
+}
 </script>
 
 <template>
@@ -78,4 +82,7 @@ function countUp(event) {
   <!-- インラインハンドラーではどうやってイベントオブジェクトにアクセスすることができるのか -->
   <button @click="number = $event.clientX">X軸表示</button>
   <!-- $eventにイベントオブジェクトが格納されている -->
+
+  <!-- v-onでハンドラーに引数を渡す -->
+  <button @click="countUp2($event, 5)">number</button>
 </template>
