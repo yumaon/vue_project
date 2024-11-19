@@ -41,4 +41,11 @@ const count = ref(0)
   </div>
   <!-- また、イベント修飾子は複数つけることも可能 -->
   <a @click.prevent.stop href="https://vuejs.org">Vue.js</a>
+
+  <!-- キーボードを入力して放したときに発生するイベント -->
+  <p>{{ count }}</p>
+  <input type="text" @keyup="count++" />
+  <!-- 上記のイベントを特定のキーが入力したときに発生させたいといったときに、キー修飾子を使用する -->
+  <!-- 以下は、スペースとdeleteキーで反応する -->
+  <input type="text" @keyup.space.delete="count++" />
 </template>
