@@ -2,6 +2,8 @@
 import { ref } from 'vue'
 
 const count = ref(0)
+
+const eventName = 'keyup'
 </script>
 
 <template>
@@ -48,4 +50,13 @@ const count = ref(0)
   <!-- 上記のイベントを特定のキーが入力したときに発生させたいといったときに、キー修飾子を使用する -->
   <!-- 以下は、スペースとdeleteキーで反応する -->
   <input type="text" @keyup.space.delete="count++" />
+
+  <!-- ディレクティブの構造（例：v-on:click.prevent="changeData"）
+       v-on 名前
+       click 引数
+       prevent 修飾子
+       changeData 値 -->
+  <!-- 角括弧（[]）を使用してディレクティブの引数にscriptのデータを指定する -->
+  <input type="text" @[eventName].space.delete="count++" />
+  <!-- @[eventName]とすることで、keyupの文字列が入りkeyupイベントに対してハンドラが追加されるということになる-->
 </template>
