@@ -3,6 +3,8 @@ import { ref } from 'vue'
 
 const count = ref(0)
 
+const userInput = ref('')
+
 const eventName = 'keyup'
 </script>
 
@@ -59,4 +61,8 @@ const eventName = 'keyup'
   <!-- 角括弧（[]）を使用してディレクティブの引数にscriptのデータを指定する -->
   <input type="text" @[eventName].space.delete="count++" />
   <!-- @[eventName]とすることで、keyupの文字列が入りkeyupイベントに対してハンドラが追加されるということになる-->
+
+  <!-- v-modelを使用してinputを単純に扱えるようにする -->
+  <p>{{ userInput }}</p>
+  <input v-model="userInput" type="text" />
 </template>
