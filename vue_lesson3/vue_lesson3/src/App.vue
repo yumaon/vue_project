@@ -1,11 +1,27 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 const count = ref(0)
 
 const userInput = ref('')
 
 const eventName = 'keyup'
+
+// computedをつかって複雑な指揮を一つにまとめる方法
+/**
+ * computedは、リアクティブシステムを保ったまま処理を一つにまとめる方法になる。
+ */
+const score = ref(0)
+const evaluation = score.value > 3 ? 'Good' : 'Bad'
+// evaluationには評価された結果がはいるためBadが入る。
+// リアクティブシステムを保ったまま、式をまとめる方法がcomputedになる
+// computedは引数に関数を入れる必要がある。その関数のなかで、まとめたい処理を書く。
+const evaluation_computed = computed((value) => {
+  console.log('computed', value)
+  return score.value > 3 ? 'Good' : 'Bad'
+})
+// コンソールで表示させるとほぼrefオブジェクトと同じような表示がでる。コンピューテッドレフオブジェクトと言ったりするし、scriptやtempleteでまるでrefオブジェクトかのように扱える。
+console.log(evaluation_computed.value)
 </script>
 
 <template>
@@ -65,4 +81,13 @@ const eventName = 'keyup'
   <!-- v-modelを使用してinputを単純に扱えるようにする -->
   <p>{{ userInput }}</p>
   <input v-model="userInput" type="text" />
+
+  <!-- computedをつかって複雑な指揮を一つにまとめる方法 -->
+  <p>{{ score > 3 ? 'Good' : 'Bad' }}</p>
+  <p>{{ evaluation }}</p>
+  <!-- この上記のコードは同じ処理ではない。evaluationには評価された結果 -->
+  <!-- ではどうやってリアクティブシステムを保ったまま、式をまとめることができるのかというと、それがcomputedになる -->
+  <p>{{ evaluation_computed }}</p>
+  <p>{{ score }}</p>
+  <button @click="score++">+1</button>
 </template>
