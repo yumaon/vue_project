@@ -7,6 +7,10 @@ const userInput = ref('')
 
 const eventName = 'keyup'
 
+function tmp() {
+  return score.value > 3 ? 'Good' : 'Bad'
+}
+
 // computedをつかって複雑な指揮を一つにまとめる方法
 /**
  * computedは、リアクティブシステムを保ったまま処理を一つにまとめる方法になる。
@@ -20,8 +24,29 @@ const evaluation_computed = computed((value) => {
   console.log('computed', value)
   return score.value > 3 ? 'Good' : 'Bad'
 })
+
+const sampleComputed = computed(() => {
+  // computedで技術的には可能だが、するべきではないこと
+  // 例 外部の状態を変更しているため、副作用になる。
+  score.value = 0
+  // 例 非同期の処理(これはブラウザが一秒間カウントし、一秒たったら、第一引数に渡した関数が実行されるというもの)
+  // タイマーで測るといったことが、外側の何かしらの状態を変更しているという扱いになるため副作用になる。
+  setTimeout(() => {}, 1000)
+  // 基本的に非同期の処理は全て副作用になるため、computedの中に含ませない。
+
+  //また、computedの中で何かしらの関数が呼び出されていた場合
+  return tmp()
+  /**
+   * computed関数の中で、同期的に普通に関数が呼ばれたときは、
+   * その呼び出された関数の中で使われているリアクティブなデータもcomputedは監視するようになる。
+   */
+})
+
 // コンソールで表示させるとほぼrefオブジェクトと同じような表示がでる。コンピューテッドレフオブジェクトと言ったりするし、scriptやtempleteでまるでrefオブジェクトかのように扱える。
 console.log(evaluation_computed.value)
+
+// computedはデータをセットすることができない。以下のようなものはエラーがでる。
+evaluation_computed.value = 'hello'
 </script>
 
 <template>
@@ -90,4 +115,6 @@ console.log(evaluation_computed.value)
   <p>{{ evaluation_computed }}</p>
   <p>{{ score }}</p>
   <button @click="score++">+1</button>
+
+  <!-- computedを使用する上での注意 -->
 </template>
