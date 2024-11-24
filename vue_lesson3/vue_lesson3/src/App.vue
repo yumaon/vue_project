@@ -116,5 +116,5 @@ evaluation_computed.value = 'hello'
   <p>{{ score }}</p>
   <button @click="score++">+1</button>
 
-  <!-- computedを使用する上での注意 -->
+  <p>{{ tmp() }}</p>
 </template>
