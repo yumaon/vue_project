@@ -1,5 +1,5 @@
 <script setup>
-import { ref, watchEffect } from 'vue'
+import { ref, watchEffect, watch } from 'vue'
 // watchEffectもcomputedと等と同じシステムで動くようになっていて、引数に関数を入れる。
 // 引数で入れた関数は、watchEffectが呼び出された時に同時に実行される。
 // computedと同じように、その実行中にアクセスしたリアクティブなデータを一時的に監視する。
@@ -24,9 +24,42 @@ watchEffect(() => {
 
 // また、もう一つ注意点として、データが監視されるためには、そのアクセスが同期的、つまり普通に上から順番に実行されるような処理の中で行われている必要がある。
 // 例えば、setTimeoutのような非同期の処理の中でcount.valueにアクセスしても正しく監視されない。
+
+// watchもwatchEffectと同じように関数になっているが、watchEffectと違って引数を二つとる。
+// 一つ目の引数に監視したいリアクティブなデータを入れる。
+// 第二引数にその監視しているデータが更新された時に実行したい処理を関数で書く。
+const count2 = ref(0)
+const count3 = ref(0)
+const count4 = ref(0)
+watch(count2, () => {
+  console.log('watch')
+  console.log(count2.value, count3.value, count4.value)
+})
+// watchとwatchEffectの違いは何かというと、明示的に監視したいデータを指定するかどうか。
+// watchはwatchEffectと違って、内部で使用しているデータ全てを監視するわけではない。
+// watchEffectの場合はcount2,3,4全て値が更新されたときに毎回実行される。
+// しかし、watchはあくまでも、count2の値が更新された時だけ実行される。
+watchEffect(() => {
+  console.log('watchEffect')
+  console.log(count2.value, count3.value, count4.value)
+})
+// watchの第二引数の関数には引数を二つとることができる。
+// 一つは第一引数で監視しているデータの最新のデータの値が入り、第二引数には、変更前の値が入る。
+watch(count2, (newValue, oldValue) => {
+  console.log('watch')
+  console.log('newValue', newValue)
+  console.log('oldValue', oldValue)
+})
 </script>
 
 <template>
   <p>{{ count }}</p>
   <button @click="count++">+1</button>
+
+  <p>{{ count2 }}(count2)</p>
+  <p>{{ count3 }}(count3)</p>
+  <p>{{ count4 }}(count4)</p>
+  <button @click="count2++">+1 count2</button>
+  <button @click="count3++">+1 count3</button>
+  <button @click="count4++">+1 count4</button>
 </template>
