@@ -6,7 +6,7 @@ import { ref, watchEffect, watch } from 'vue'
 // なのでcomputedとほどんと同じ動きになる。
 const count = ref(0)
 watchEffect(() => {
-  console.log('watchEffect')
+  console.log('watchEffect1')
   console.log(count.value)
   // ウォッチャーは副作用を入れることができるため、（以下例）非同期の処理でsetTimeoutとか書くことができる。
   setTimeout(() => {
@@ -40,7 +40,7 @@ watch(count2, () => {
 // watchEffectの場合はcount2,3,4全て値が更新されたときに毎回実行される。
 // しかし、watchはあくまでも、count2の値が更新された時だけ実行される。
 watchEffect(() => {
-  console.log('watchEffect')
+  console.log('watchEffect2')
   console.log(count2.value, count3.value, count4.value)
 })
 // watchの第二引数の関数には引数を二つとることができる。
@@ -93,13 +93,27 @@ const sampleObject = ref({
 // })
 // なので、リアクティブオブジェクトのプロパティを監視したい場合は、必ず関数を使用した書き方で指定する必要があったりする
 watch(
-  () => sampleObject.value.a,
+  () => {
+    console.log('watch first argument')
+    return sampleObject.value.a
+  },
   (newValue, oldValue) => {
     console.log('watch sampleObject')
     console.log('newValue', newValue)
     console.log('oldValue', oldValue)
   },
+  { immediate: true },
 )
+// watchの実行タイミングについて
+/**
+ *ページをリロードすると、watch sampleObjectと出力されるが、第二引数（newValue,oldValueの出力部分）に関しては、実行されない。
+ *監視しているデータが更新された時（+1 sampleObjectボタンが押された時）に実行される。
+ *watchEffectは最初にすぐに実行されるが、watchの第二引数は最初は実行されずに監視しているデータが更新されたときに初めて実行される。
+ *その上で、その設定を変更する方法がwatchには用意されている。
+ *第三引数にオブジェクトをとり、immediateとし、プロパティにtrueとする
+ *こうすることで、watchEffectと同じタイミングで実行されるようになる。ページリロード時に第二引数も実行されるようになる。
+ *そのときのoldValueはundefinedとなる
+ */
 </script>
 
 <template>
@@ -109,7 +123,9 @@ watch(
   <p>{{ count2 }}(count2)</p>
   <p>{{ count3 }}(count3)</p>
   <p>{{ count4 }}(count4)</p>
+  <p>{{ sampleObject.a }}</p>
   <button @click="count2++">+1 count2</button>
   <button @click="count3++">+1 count3</button>
   <button @click="count4++">+1 count4</button>
+  <button @click="sampleObject.a++">+1 sampleObject</button>
 </template>
