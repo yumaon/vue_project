@@ -50,6 +50,56 @@ watch(count2, (newValue, oldValue) => {
   console.log('newValue', newValue)
   console.log('oldValue', oldValue)
 })
+// また以下のように、第一引数にも関数を入れられるようになっている。
+// このように書いた場合は、この関数は、watchEffectと同じような動きをする。（watch(() => {}この部分）
+watch(
+  () => {
+    console.log('watch first argument')
+    return count3.value
+  },
+  (newValue, oldValue) => {
+    console.log('watch')
+    console.log('newValue', newValue)
+    console.log('oldValue', oldValue)
+  },
+)
+// これでwatchEffectと同じような動きをするため、ページをリロードすると、watch first argumentと出力され、count3の値が更新されれても実行される。
+// この時に、ついでじゃないけど、第二引数の関数も実行されるようになっている。（newValueとoldValueの出力の部分）
+// この時のnewValue,oldValueには、第一引数の返り値が入って、上記の例でいうと、count3のnewとoldが入る
+// 注意点として、watchではこの第二引数のnewValueとoldValueが同じ値であったときは、この第二引数の関数は実行されないという性質をもっている。
+// 例えば、return 0 みたいな感じにすると返り値が0のまま一定のため、第二引数の関数は実行されない。
+// なので、もし毎回関数を実行させたい場合は、必ず監視するデータが返り値に影響するように書くようにすること。
+
+// また、複数のリアクティブなデータを監視したい場合は、第一引数に配列を入れることもできる
+watch([count3, count4], (newValue, oldValue) => {
+  console.log('watch')
+  console.log('newValue', newValue)
+  console.log('oldValue', oldValue)
+})
+// ちなみに出力はこんな感じになる
+// watch
+// newValue (2) [1, 3]
+// oldValue (2) [1, 2]
+
+// また、例えば、リアクティブオブジェクトの特定のプロパティを監視したい場合
+const sampleObject = ref({
+  a: 0,
+})
+// このようにしたら、0を指定したのと同じ意味になってしまう。なので、この書き方はできない。
+// watch(sampleObject.value.a, (newValue, oldValue) => {
+//   console.log('watch sampleObject')
+//   console.log('newValue', newValue)
+//   console.log('oldValue', oldValue)
+// })
+// なので、リアクティブオブジェクトのプロパティを監視したい場合は、必ず関数を使用した書き方で指定する必要があったりする
+watch(
+  () => sampleObject.value.a,
+  (newValue, oldValue) => {
+    console.log('watch sampleObject')
+    console.log('newValue', newValue)
+    console.log('oldValue', oldValue)
+  },
+)
 </script>
 
 <template>
